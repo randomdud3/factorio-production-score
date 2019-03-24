@@ -2,10 +2,20 @@ local function get_total_production_counts(production_statistics)
   local produced = production_statistics.input_counts
   local consumed = production_statistics.output_counts
   for name, value in pairs (consumed) do
+    local prototype = game.item_prototypes[name]
+
+    if prototype.subgroup.name == "science-pack" then
+      value = 0
+    end
+    
     if produced[name] then
       produced[name] = produced[name] - value
     else
       produced[name] = -value
+    end
+    
+    if prototype.subgroup.name == "raw-resource" then
+      produced[name] = value
     end
   end
   return produced
@@ -107,7 +117,7 @@ local default_param = function()
       ["crude-oil"] = 0.2,
       ["water"] = 1/1000,
       ["steam"] = 1/1000,
-      ["raw-wood"] = 3.2,
+      ["wood"] = 3.2,
       ["raw-fish"] = 100,
       ["energy"] = 1,
       ["uranium-ore"] = 8.2
