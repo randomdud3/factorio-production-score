@@ -61,7 +61,7 @@ local function get_product_list()
         for j, ingredient in pairs (ingredients) do
           recipe_ingredients[ingredient.name] = (ingredient.amount * (product_amount / total_products_amount)) / product_amount
         end
-        recipe_ingredients.energy = recipe_prototype.energy
+        recipe_ingredients.energy = recipe_prototype.energy / #products / product_amount
         table.insert(product_list[product.name], recipe_ingredients)
       end
     end
