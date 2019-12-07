@@ -45,6 +45,12 @@ local function get_product_list()
   for recipe_name, recipe_prototype in pairs (recipes) do
     local ingredients = recipe_prototype.ingredients
     local products = recipe_prototype.products
+    local total_products_amount = 0.0
+    for k, product in pairs(products) do
+      local total_product_amount = product.amount or product.probability * ((product.amount_min + product.amount_max) / 2) or 1
+
+      total_products_amount = total_products_amount + total_product_amount
+    end
     for k, product in pairs (products) do
       if not product_list[product.name] then
         product_list[product.name] = {}
@@ -53,7 +59,7 @@ local function get_product_list()
       local product_amount = product.amount or product.probability * ((product.amount_min + product.amount_max) / 2) or 1
       if product_amount > 0 then
         for j, ingredient in pairs (ingredients) do
-          recipe_ingredients[ingredient.name] = ((ingredient.amount)/#products) / product_amount
+          recipe_ingredients[ingredient.name] = (ingredient.amount * (product_amount / total_products_amount)) / product_amount
         end
         recipe_ingredients.energy = recipe_prototype.energy
         table.insert(product_list[product.name], recipe_ingredients)
